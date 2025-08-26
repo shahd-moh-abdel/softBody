@@ -10,13 +10,15 @@ float forceY = 300.0;
 
 int main()
 {
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Soft Body");
 
   Particle point((Vector2){50, 50}, 10);
   ParticleSystem system;
 
-  system.createBox(Vector2 {300, 200}, 100);
-  
+  //system.createBox(Vector2 {300, 200}, 100);
+
+  system.createRope(Vector2 {100, 50}, Vector2 {500, 50}, 10);
   SetTargetFPS(60);
 
   while (!WindowShouldClose())

@@ -18,6 +18,7 @@ public:
 
   //shapes
   void createBox(Vector2 center, float size);
+  void createRope(Vector2 start, Vector2 end, int segments);
   
 
   void addConstraint(int a, int b);

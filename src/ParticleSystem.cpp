@@ -62,3 +62,29 @@ void ParticleSystem::createBox(Vector2 center, float size)
   addConstraint(0, 3);
   addConstraint(1, 2);
 }
+
+void ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
+{
+  clear();
+
+  //create the points along the rope
+  for (int i = 0; i <= segments; i++)
+    {
+      float t = (float)i / segments;
+      Vector2 pos = {
+	start.x + t * (end.x - start.x),
+	start.y + t * (end.y - start.y)
+      };
+
+      particles.emplace_back(pos, 1.0f);
+    }
+
+  //connect them
+  for (int i = 0; i < segments; i++) {
+    addConstraint(i, i + 1);
+  }
+
+  //pin the first
+  if (!particles.empty())
+    particles[0].mass = 0.0f;
+}

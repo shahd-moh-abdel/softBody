@@ -12,6 +12,8 @@ Particle::Particle(Vector2 initPos, float initMass)
 //UPDATE:
 void Particle::update(float dt)
 {
+  if (mass > 0)
+    {
       //current pos to old x
     Vector2 tempPos = pos;
     
@@ -21,6 +23,8 @@ void Particle::update(float dt)
 
     //current to old
     oldPos = tempPos;
+
+    }
 }
 
 //ACCUMULATE FORCES:
