@@ -13,7 +13,9 @@ int main()
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Soft Body");
 
   Particle point((Vector2){50, 50}, 10);
-  ParticleSystem system(5);
+  ParticleSystem system;
+
+  system.createBox(Vector2 {300, 200}, 100);
   
   SetTargetFPS(60);
 

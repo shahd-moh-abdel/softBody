@@ -10,10 +10,15 @@
 class ParticleSystem {
 public:
   std::vector<Particle> particles;
-  std::vector<Constraint> constrains;
+  std::vector<Constraint> constraints;
   
   Vector2 gravity  = {0.0f, 300.0f};
-  ParticleSystem(int particlesCount);
+  
+  void clear();
+
+  //shapes
+  void createBox(Vector2 center, float size);
+  
 
   void addConstraint(int a, int b);
   void update(float dt, int SCREEN_W, int SCREEN_H);

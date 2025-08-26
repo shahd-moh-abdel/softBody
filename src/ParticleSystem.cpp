@@ -4,26 +4,10 @@
 #include "../include/ParticleSystem.h"
 #include "../include/Constraint.h"
 
-ParticleSystem::ParticleSystem(int particleCount)
-{
-  particles.emplace_back(Vector2{200, 200}, 1.0f);
-  particles.emplace_back(Vector2{300, 200}, 1.0f);
-  particles.emplace_back(Vector2{200, 300}, 1.0f);
-  particles.emplace_back(Vector2{300, 300}, 1.0f);
-
-  addConstraint(0, 1);
-  addConstraint(1, 3);
-  addConstraint(3, 2);
-  addConstraint(2, 0);
-  addConstraint(0, 3);
-  addConstraint(1, 2);
-
-}
-
 void ParticleSystem::addConstraint(int a, int b)
 {
   float rest = Vector2Distance(particles[a].pos, particles[b].pos);
-  constrains.emplace_back(a, b, rest);
+  constraints.emplace_back(a, b, rest);
 }
 
 
@@ -39,7 +23,7 @@ void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
 
   for (int i = 0; i < 5; i++)
     {
-      for (auto& c : constrains)
+      for (auto& c : constraints)
 	c.satisfy(particles);
     }
 }
@@ -48,10 +32,33 @@ void ParticleSystem::draw()
   for (auto &p : particles)
       p.draw();
 
-  for (auto &c : constrains)
+  for (auto &c : constraints)
     {
       Vector2 a = particles[c.a].pos;
       Vector2 b = particles[c.b].pos;
       DrawLine(a.x, a.y, b.x, b.y, YELLOW);
     }
+}
+
+void ParticleSystem::clear() {
+  particles.clear();
+  constraints.clear();
+}
+
+void ParticleSystem::createBox(Vector2 center, float size)
+{
+  clear();
+
+  particles.emplace_back(Vector2 {center.x - size/2, center.y - size/2}, 1.0f);//0
+  particles.emplace_back(Vector2 {center.x + size/2, center.y - size/2}, 1.0f);//1
+  particles.emplace_back(Vector2 {center.x - size/2, center.y + size/2}, 1.0f);//2
+  particles.emplace_back(Vector2 {center.x + size/2, center.y + size/2}, 1.0f);//3
+
+  addConstraint(0, 1);
+  addConstraint(1, 3);
+  addConstraint(3, 2);
+  addConstraint(2, 0);
+
+  addConstraint(0, 3);
+  addConstraint(1, 2);
 }
