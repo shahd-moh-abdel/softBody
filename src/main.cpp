@@ -25,7 +25,6 @@ int main()
       BeginDrawing();
       system.update(dt, SCREEN_WIDTH, SCREEN_HEIGHT);
       system.draw();
-      //DrawRectangle(50, 50, 50, 50, RED);
       EndDrawing();
     }
 
