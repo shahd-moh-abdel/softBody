@@ -1,5 +1,5 @@
-#ifndef PARTICLE_SYSTEM
-#define PARTICLE_SYSTEM
+#ifndef PARTICLE
+#define PARTICLE
 #include "raylib.h"
 
 class Particle {

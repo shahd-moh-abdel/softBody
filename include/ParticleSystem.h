@@ -1,19 +1,19 @@
 #ifndef PARTICLE_SYSTEM
 #define PARTICLE_SYSTEM
+
+#include <vector>
 #include "raylib.h"
 
-class ParticleSystem {
- public:
-  Vector2 pos;
-  Vector2 oldPos;
-  Vector2 gravity;
-  Vector2 acc;//force accumulators
-  float mass;
+#include "Particle.h"
 
-  ParticleSystem(Vector2 initPos, float initMass);
-  void update(float dt);
-  void constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT);
-  void accumulateForces();
-  void draw();
+class ParticleSystem {
+public:
+  std::vector<Particle> particles;
+  Vector2 gravity  = {0.0f, 300.0f};
+  ParticleSystem(int particlesCount);
+  void update(int dt, int SCREEN_W, int SCREEN_H);
+  void draw();  
 };
+
+
 #endif

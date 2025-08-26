@@ -1,67 +1,24 @@
+#include <raylib.h>
+#include <vector>
 #include "../include/ParticleSystem.h"
-#include "raylib.h"
 
-ParticleSystem::ParticleSystem(Vector2 initPos, float initMass)
-{
-  pos = initPos;
-  oldPos = pos;
-  gravity = {0.0, 300.0};
-  mass = initMass;
-}
-
-//UPDATE:
-void ParticleSystem::update(float dt)
-{
-      //current pos to old x
-    Vector2 tempPos = pos;
-    
-    //new pos (Verlet int)
-    pos.x += (pos.x - oldPos.x) + acc.x * dt * dt;
-    pos.y += (pos.y - oldPos.y) + acc.y * dt * dt;
-
-    //current to old
-    oldPos = tempPos;
-}
-
-//ACCUMULATE FORCES:
-void ParticleSystem::accumulateForces()
-{
-  acc = gravity;
-}
-
-//CONSTRAIN:
-void ParticleSystem::constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT)
-{
-  float radius = 10.0f;
-
-  //bottom
-  if (pos.y > SCREEN_HEIGHT - radius)
+ParticleSystem::ParticleSystem(int particleCount) {
+  for (int i = 0; i < particleCount; i++)
     {
-      pos.y = SCREEN_HEIGHT - radius;
+      particles.emplace_back(Vector2{ 50 + i * 30.0f, 50}, 10);
     }
-
-  //top
-  if (pos.y < radius)
-    {
-      pos.y = radius;
-    }
-
-  //right
-  if (pos.x > SCREEN_WIDTH - radius)
-    {
-      pos.x = SCREEN_WIDTH - radius;
-    }
-
-  //left
-  if (pos.x < radius)
-    {
-      pos.x = radius;
-    }
-  
 }
-
-//DRAW
+void ParticleSystem::update(int dt, int SCREEN_W, int SCREEN_H)
+{
+  for (auto &p : particles)
+    {
+      p.accumulateForces();
+      p.update(dt);
+      p.constrain(SCREEN_W, SCREEN_H);
+    }
+}
 void ParticleSystem::draw()
 {
-  DrawCircle(pos.x, pos.y, 10, RED);
+  for (auto &p : particles)
+    p.draw();
 }

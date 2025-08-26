@@ -13,6 +13,7 @@ int main()
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Soft Body");
 
   Particle point((Vector2){50, 50}, 10);
+  ParticleSystem system(5);
   
   SetTargetFPS(60);
 
@@ -22,10 +23,8 @@ int main()
       float dt = GetFrameTime();
       ClearBackground(BLACK);
       BeginDrawing();
-      point.accumulateForces();
-      point.update(dt);
-      point.constrain(SCREEN_HEIGHT, SCREEN_WIDTH);
-      point.draw();
+      system.update(dt, SCREEN_WIDTH, SCREEN_HEIGHT);
+      system.draw();
       //DrawRectangle(50, 50, 50, 50, RED);
       EndDrawing();
     }

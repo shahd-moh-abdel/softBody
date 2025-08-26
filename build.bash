@@ -1,1 +1,1 @@
-g++ src/main.cpp src/ParticleSystem.cpp src/Particle.cpp -o app -lm -lpthread -ldl -lrt -lX11 -lraylib -lGL
+g++ src/main.cpp src/Particle.cpp src/ParticleSystem.cpp -o app -lm -lpthread -ldl -lrt -lX11 -lraylib -lGL
