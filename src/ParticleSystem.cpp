@@ -8,7 +8,7 @@ ParticleSystem::ParticleSystem(int particleCount) {
       particles.emplace_back(Vector2{ 50 + i * 30.0f, 50}, 10);
     }
 }
-void ParticleSystem::update(int dt, int SCREEN_W, int SCREEN_H)
+void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
 {
   for (auto &p : particles)
     {

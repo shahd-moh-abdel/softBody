@@ -11,7 +11,7 @@ public:
   std::vector<Particle> particles;
   Vector2 gravity  = {0.0f, 300.0f};
   ParticleSystem(int particlesCount);
-  void update(int dt, int SCREEN_W, int SCREEN_H);
+  void update(float dt, int SCREEN_W, int SCREEN_H);
   void draw();  
 };
 
