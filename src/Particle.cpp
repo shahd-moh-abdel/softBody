@@ -1,7 +1,7 @@
-#include "../include/ParticleSystem.h"
+#include "../include/Particle.h"
 #include "raylib.h"
 
-ParticleSystem::ParticleSystem(Vector2 initPos, float initMass)
+Particle::Particle(Vector2 initPos, float initMass)
 {
   pos = initPos;
   oldPos = pos;
@@ -10,7 +10,7 @@ ParticleSystem::ParticleSystem(Vector2 initPos, float initMass)
 }
 
 //UPDATE:
-void ParticleSystem::update(float dt)
+void Particle::update(float dt)
 {
       //current pos to old x
     Vector2 tempPos = pos;
@@ -24,13 +24,13 @@ void ParticleSystem::update(float dt)
 }
 
 //ACCUMULATE FORCES:
-void ParticleSystem::accumulateForces()
+void Particle::accumulateForces()
 {
   acc = gravity;
 }
 
 //CONSTRAIN:
-void ParticleSystem::constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT)
+void Particle::constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT)
 {
   float radius = 10.0f;
 
@@ -61,7 +61,7 @@ void ParticleSystem::constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT)
 }
 
 //DRAW
-void ParticleSystem::draw()
+void Particle::draw()
 {
   DrawCircle(pos.x, pos.y, 10, RED);
 }

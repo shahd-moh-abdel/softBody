@@ -2,7 +2,7 @@
 #define PARTICLE_SYSTEM
 #include "raylib.h"
 
-class ParticleSystem {
+class Particle {
  public:
   Vector2 pos;
   Vector2 oldPos;
@@ -10,7 +10,7 @@ class ParticleSystem {
   Vector2 acc;//force accumulators
   float mass;
 
-  ParticleSystem(Vector2 initPos, float initMass);
+  Particle(Vector2 initPos, float initMass);
   void update(float dt);
   void constrain(int SCREEN_WIDTH, int SCREEN_HEIGHT);
   void accumulateForces();

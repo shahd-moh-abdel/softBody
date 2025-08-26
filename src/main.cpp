@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "../include/Particle.h"
 #include "../include/ParticleSystem.h"
 
 #define SCREEN_WIDTH 600
@@ -11,7 +12,7 @@ int main()
 {
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Soft Body");
 
-  ParticleSystem point((Vector2){50, 50}, 10);
+  Particle point((Vector2){50, 50}, 10);
   
   SetTargetFPS(60);
 
@@ -21,7 +22,9 @@ int main()
       float dt = GetFrameTime();
       ClearBackground(BLACK);
       BeginDrawing();
+      point.accumulateForces();
       point.update(dt);
+      point.constrain(SCREEN_HEIGHT, SCREEN_WIDTH);
       point.draw();
       //DrawRectangle(50, 50, 50, 50, RED);
       EndDrawing();
