@@ -19,8 +19,8 @@ public:
   //shapes
   void createBox(Vector2 center, float size);
   void createRope(Vector2 start, Vector2 end, int segments);
-  void createCloth(Vector2 topLeft, int width, int height, float spacing);
-  
+  void createCloth(Vector2 topLeft,int width, int height, float spacing);//fix later
+  void createBlob(Vector2 center, float radius, int points);
 
   void addConstraint(int a, int b);
   void update(float dt, int SCREEN_W, int SCREEN_H);

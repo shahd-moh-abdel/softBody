@@ -134,3 +134,34 @@ void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
       particles[x].mass = 0.0f;
     }
 }
+
+// THE BOLB
+void ParticleSystem::createBlob(Vector2 center, float radius, int points)
+{
+  clear();
+
+  //create points in a circle
+  for (int i = 0; i < points; i++)
+    {
+      float angle = 2.0f * PI * i / points;
+      Vector2 pos = {
+	center.x + radius * cos(angle),
+	center.y + radius * sin(angle)
+      };
+      particles.emplace_back(pos, 1.0f);
+    }
+
+  //connect points
+  for (int i = 0; i < points; i++)
+    {
+      int next = (i + 1) % points;
+      addConstraint(i , next);
+    }
+  
+  for (int i = 0; i < points; i++)
+    {
+      int opposite = (i + points / 2) % points;
+      if (i < opposite)
+	addConstraint(i, opposite);
+    }
+}
