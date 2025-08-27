@@ -10,6 +10,7 @@ Constraint::Constraint (int pointA, int pointB, float rest)
 
 void Constraint::satisfy(std::vector<Particle>& particles)
 {
+  if (particles[a].mass == 0.0f) return;
       Vector2& x1 = particles[a].pos;
       Vector2& x2 = particles[b].pos;
 
