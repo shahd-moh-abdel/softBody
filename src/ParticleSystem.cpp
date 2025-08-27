@@ -164,4 +164,6 @@ void ParticleSystem::createBlob(Vector2 center, float radius, int points)
       if (i < opposite)
 	addConstraint(i, opposite);
     }
+
 }
+
