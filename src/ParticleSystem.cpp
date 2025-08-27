@@ -64,9 +64,9 @@ int ParticleSystem::createBox(Vector2 center, float size)
   return startIdx;
 }
 
-void ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
+int ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
 {
-  clear();
+  int startIdx = particles.size();
 
   //create the points along the rope
   for (int i = 0; i <= segments; i++)
@@ -82,12 +82,14 @@ void ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
 
   //connect them
   for (int i = 0; i < segments; i++) {
-    addConstraint(i, i + 1);
+    addConstraint(startIdx + i, startIdx + i + 1);
   }
 
   //pin the first
   if (!particles.empty())
-    particles[0].mass = 0.0f;
+    particles[startIdx].mass = 0.0f;
+
+  return startIdx;
 }
 
 void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
