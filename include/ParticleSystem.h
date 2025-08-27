@@ -17,7 +17,7 @@ public:
   void clear();
 
   //shapes
-  void createBox(Vector2 center, float size);
+  int createBox(Vector2 center, float size);
   void createRope(Vector2 start, Vector2 end, int segments);
   void createCloth(Vector2 topLeft,int width, int height, float spacing);//fix later
   void createBlob(Vector2 center, float radius, int points);

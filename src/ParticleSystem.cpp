@@ -10,12 +10,11 @@ void ParticleSystem::addConstraint(int a, int b)
   constraints.emplace_back(a, b, rest);
 }
 
-
-
 void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
 {
   for (auto &p : particles)
     {
+      if (p.mass == 0) continue;
       p.accumulateForces();
       p.update(dt);
       p.constrain(SCREEN_W, SCREEN_H);
@@ -45,22 +44,24 @@ void ParticleSystem::clear() {
   constraints.clear();
 }
 
-void ParticleSystem::createBox(Vector2 center, float size)
+int ParticleSystem::createBox(Vector2 center, float size)
 {
-  clear();
+  int startIdx = particles.size();
 
   particles.emplace_back(Vector2 {center.x - size/2, center.y - size/2}, 1.0f);//0
   particles.emplace_back(Vector2 {center.x + size/2, center.y - size/2}, 1.0f);//1
   particles.emplace_back(Vector2 {center.x - size/2, center.y + size/2}, 1.0f);//2
   particles.emplace_back(Vector2 {center.x + size/2, center.y + size/2}, 1.0f);//3
 
-  addConstraint(0, 1);
-  addConstraint(1, 3);
-  addConstraint(3, 2);
-  addConstraint(2, 0);
+  addConstraint(startIdx + 0, startIdx + 1);
+  addConstraint(startIdx + 1, startIdx + 3);
+  addConstraint(startIdx + 3, startIdx + 2);
+  addConstraint(startIdx + 2, startIdx + 0);
 
-  addConstraint(0, 3);
-  addConstraint(1, 2);
+  addConstraint(startIdx + 0, startIdx + 3);
+  addConstraint(startIdx + 1, startIdx + 2);
+
+  return startIdx;
 }
 
 void ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
