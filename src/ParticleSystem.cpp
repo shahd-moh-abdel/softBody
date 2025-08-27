@@ -88,3 +88,49 @@ void ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
   if (!particles.empty())
     particles[0].mass = 0.0f;
 }
+
+void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
+                                 float spacing)
+{
+  clear();
+
+  //create grid of points
+  for (int y = 0; y < height; y++)
+    {
+      for (int x = 0; x < width; x++)
+	{
+	  Vector2 pos ={
+	    topLeft.x + x * spacing,
+	    topLeft.y + y * spacing
+	  };
+
+	  particles.emplace_back(pos, 1.0f);
+	}
+    }
+
+  //add constraits
+  for (int y = 0; y < height; y++)
+    {
+      for (int x = 0; x < width - 1; x++)
+	{
+	  int idx1 = y * width + x;
+	  int idx2 = y * width + (x + 1);
+	  addConstraint(idx1, idx2);
+	}
+    }
+  for (int y = 0; y < height - 1; y++)
+    {
+      for (int x = 0; x < width; x++)
+	{
+	  int idx1 = y * width + x;
+	  int idx2 = (y + 1) * width + x;
+	  addConstraint(idx1, idx2);
+	}
+    }
+
+  //pin top row
+  for (int x = 0; x < width; x++)
+    {
+      particles[x].mass = 0.0f;
+    }
+}
