@@ -19,7 +19,8 @@ int main()
   system.createBox(Vector2 {300,  100}, 100);
   system.createRope(Vector2 {100, 50}, Vector2 {500, 50}, 10);
   //system.createCloth(Vector2 {100, 30}, 15, 5, 30);
-  //system.createBlob(Vector2{ 200, 300}, 100, 20);
+  system.createBlob(Vector2{ 200, 300}, 100, 20);
+  system.createBlob(Vector2{ 200, 400}, 100, 15);
   SetTargetFPS(60);
 
   while (!WindowShouldClose())

@@ -64,6 +64,7 @@ int ParticleSystem::createBox(Vector2 center, float size)
   return startIdx;
 }
 
+
 int ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
 {
   int startIdx = particles.size();
@@ -91,7 +92,8 @@ int ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
 
   return startIdx;
 }
-
+/*
+  I'll fix later
 void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
                                  float spacing)
 {
@@ -101,34 +103,34 @@ void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
   for (int y = 0; y < height; y++)
     {
       for (int x = 0; x < width; x++)
-	{
-	  Vector2 pos ={
-	    topLeft.x + x * spacing,
-	    topLeft.y + y * spacing
-	  };
+        {
+          Vector2 pos ={
+            topLeft.x + x * spacing,
+            topLeft.y + y * spacing
+          };
 
-	  particles.emplace_back(pos, 1.0f);
-	}
+          particles.emplace_back(pos, 1.0f);
+        }
     }
 
   //add constraits
   for (int y = 0; y < height; y++)
     {
       for (int x = 0; x < width - 1; x++)
-	{
-	  int idx1 = y * width + x;
-	  int idx2 = y * width + (x + 1);
-	  addConstraint(idx1, idx2);
-	}
+        {
+          int idx1 = y * width + x;
+          int idx2 = y * width + (x + 1);
+          addConstraint(idx1, idx2);
+        }
     }
   for (int y = 0; y < height - 1; y++)
     {
       for (int x = 0; x < width; x++)
-	{
-	  int idx1 = y * width + x;
-	  int idx2 = (y + 1) * width + x;
-	  addConstraint(idx1, idx2);
-	}
+        {
+          int idx1 = y * width + x;
+          int idx2 = (y + 1) * width + x;
+          addConstraint(idx1, idx2);
+        }
     }
 
   //pin top row
@@ -137,11 +139,12 @@ void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
       particles[x].mass = 0.0f;
     }
 }
+*/
 
 // THE BOLB
-void ParticleSystem::createBlob(Vector2 center, float radius, int points)
+int ParticleSystem::createBlob(Vector2 center, float radius, int points)
 {
-  clear();
+  int startIdx = particles.size();
 
   //create points in a circle
   for (int i = 0; i < points; i++)
@@ -158,15 +161,16 @@ void ParticleSystem::createBlob(Vector2 center, float radius, int points)
   for (int i = 0; i < points; i++)
     {
       int next = (i + 1) % points;
-      addConstraint(i , next);
+      addConstraint(startIdx + i ,startIdx + next);
     }
   
   for (int i = 0; i < points; i++)
     {
       int opposite = (i + points / 2) % points;
       if (i < opposite)
-	addConstraint(i, opposite);
+	addConstraint(startIdx + i, startIdx + opposite);
     }
 
+  return startIdx;
 }
 
