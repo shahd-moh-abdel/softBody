@@ -28,7 +28,7 @@ int main()
       ClearBackground(BLACK);
       BeginDrawing();
       system.update(dt, SCREEN_WIDTH, SCREEN_HEIGHT);
-      //system.draw();
+      system.draw();
       EndDrawing();
     }
 

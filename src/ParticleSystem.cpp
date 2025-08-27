@@ -38,7 +38,7 @@ void ParticleSystem::draw()
       Vector2 b = particles[c.b].pos;
       DrawLine(a.x, a.y, b.x, b.y, YELLOW);
     }
-}
+  }
 
 void ParticleSystem::clear() {
   particles.clear();
