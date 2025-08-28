@@ -10,6 +10,18 @@ void ParticleSystem::addConstraint(int a, int b)
   constraints.emplace_back(a, b, rest);
 }
 
+void ParticleSystem::resolveParticleCollisions()
+{
+  if (!enableParticleCollisions) return;
+  for (size_t i = 0; i < particles.size(); i++)
+    {
+      for (size_t j = i + 1; j < particles.size(); j++)
+	{
+	  particles[i].resolveCollisionWith(particles[j]);
+	}
+    }
+}
+
 void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
 {
   for (auto &p : particles)
@@ -17,7 +29,6 @@ void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
       if (p.mass == 0) continue;
       p.accumulateForces();
       p.update(dt);
-      p.constrain(SCREEN_W, SCREEN_H);
     }
 
   for (int i = 0; i < 5; i++)
@@ -25,9 +36,18 @@ void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
       for (auto& c : constraints)
 	c.satisfy(particles);
     }
+
+  for (auto &p : particles)
+    {
+      p.constrainWithCollisions(SCREEN_W, SCREEN_H, &collisionSystem);
+    }
+
+    resolveParticleCollisions();
 }
 void ParticleSystem::draw()
 {
+  collisionSystem.draw();
+  
   for (auto &p : particles)
       p.draw();
 
@@ -39,9 +59,24 @@ void ParticleSystem::draw()
     }
   }
 
-void ParticleSystem::clear() {
+void ParticleSystem::clear()
+{
   particles.clear();
   constraints.clear();
+  collisionSystem.clear();
+}
+
+void ParticleSystem::addCircleObstacle(Vector2 center, float radius)
+{
+  collisionSystem.addCircle(center, radius);
+}
+
+void ParticleSystem::addRectangleObstacle(Vector2 position, Vector2 size) {
+  collisionSystem.addRectangle(position, size);
+}
+
+void ParticleSystem::clearObstacles() {
+  collisionSystem.clear();
 }
 
 int ParticleSystem::createBox(Vector2 center, float size)
@@ -154,7 +189,7 @@ int ParticleSystem::createBlob(Vector2 center, float radius, int points)
 	center.x + radius * cos(angle),
 	center.y + radius * sin(angle)
       };
-      particles.emplace_back(pos, 1.0f);
+      particles.emplace_back(pos, 0.5f);
     }
 
   //connect points

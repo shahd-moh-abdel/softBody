@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Constraint.h"
+#include "CollisionSystem.h"
 #include "raylib.h"
 
 #include "Particle.h"
@@ -11,9 +12,10 @@ class ParticleSystem {
 public:
   std::vector<Particle> particles;
   std::vector<Constraint> constraints;
+  CollisionSystem collisionSystem;
   
   Vector2 gravity  = {0.0f, 300.0f};
-  
+  bool enableParticleCollisions = true;
   void clear();
 
   //shapes
@@ -24,7 +26,14 @@ public:
 
   void addConstraint(int a, int b);
   void update(float dt, int SCREEN_W, int SCREEN_H);
-  void draw();  
+  void draw();
+  
+  void addCircleObstacle(Vector2 center, float radius);
+  void addRectangleObstacle(Vector2 position, Vector2 size);
+  void clearObstacles();
+
+private:
+  void resolveParticleCollisions();
 };
 
 

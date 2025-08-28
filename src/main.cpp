@@ -2,8 +2,8 @@
 #include "../include/Particle.h"
 #include "../include/ParticleSystem.h"
 
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1000
+#define SCREEN_HEIGHT 700
 
 float forceX = 100.0;
 float forceY = 300.0;
@@ -15,12 +15,20 @@ int main()
 
   ParticleSystem system;
 
-  system.createBox(Vector2 {300, 200}, 100);
-  system.createBox(Vector2 {300,  100}, 100);
-  system.createRope(Vector2 {100, 50}, Vector2 {500, 50}, 10);
-  //system.createCloth(Vector2 {100, 30}, 15, 5, 30);
-  system.createBlob(Vector2{ 200, 300}, 100, 20);
-  system.createBlob(Vector2{ 200, 400}, 100, 15);
+  //system.createBox(Vector2 {200, 100}, 60);
+  system.createBlob(Vector2{200, 200}, 40, 12);
+  system.createBlob(Vector2{200, 100}, 30, 10);
+  for (int i = 0; i < 5; i++)
+    {
+      system.createBlob(Vector2{200 + i * 100.0f, 100}, 30, 10);
+    }
+  //system.createRope(Vector2 {50, 50}, Vector2 {300, 50}, 15);
+  system.addCircleObstacle(Vector2{400, 400}, 80);
+  system.addCircleObstacle(Vector2{700, 300}, 60);
+  system.addRectangleObstacle(Vector2{600, 500}, Vector2{200, 30});
+  system.addRectangleObstacle(Vector2{50, 600}, Vector2{150, 30});
+  system.addRectangleObstacle(Vector2{800, 200}, Vector2{30, 200});
+  
   SetTargetFPS(60);
 
   while (!WindowShouldClose())
