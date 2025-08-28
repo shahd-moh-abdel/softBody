@@ -47,6 +47,16 @@ void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
 void ParticleSystem::draw()
 {
   collisionSystem.draw();
+
+  if (drawFilled) {
+    for (auto& shape : shapes) {
+      if (shape.type == Shape::BOX) {
+        drawFilledBox(shape);
+      } else if (shape.type == Shape::BLOB) {
+        drawFilledBlob(shape);
+      }
+    }
+  }
   
   for (auto &p : particles)
       p.draw();
@@ -57,7 +67,43 @@ void ParticleSystem::draw()
       Vector2 b = particles[c.b].pos;
       DrawLine(a.x, a.y, b.x, b.y, YELLOW);
     }
+}
+
+void ParticleSystem::drawFilledBox(const Shape& shape) {
+  if (shape.particleCount != 4) return;
+  
+  // Get the four corner positions
+  Vector2 corners[4];
+  for (int i = 0; i < 4; i++) {
+    corners[i] = particles[shape.startIndex + i].pos;
   }
+  
+  // Draw as a quad using triangles
+  DrawTriangle(corners[0], corners[1], corners[2], shape.fillColor);
+  DrawTriangle(corners[1], corners[2], corners[3], shape.fillColor);
+}
+
+void ParticleSystem::drawFilledBlob(const Shape& shape) {
+  if (shape.particleCount < 3) return;
+  
+  // Calculate center point for triangle fan
+  Vector2 center = {0, 0};
+  for (int i = 0; i < shape.particleCount; i++) {
+    center.x += particles[shape.startIndex + i].pos.x;
+    center.y += particles[shape.startIndex + i].pos.y;
+  }
+  center.x /= shape.particleCount;
+  center.y /= shape.particleCount;
+  
+  // Draw triangle fan from center to each edge
+  for (int i = 0; i < shape.particleCount; i++) {
+    int next = (i + 1) % shape.particleCount;
+    Vector2 p1 = particles[shape.startIndex + i].pos;
+    Vector2 p2 = particles[shape.startIndex + next].pos;
+    
+    DrawTriangle(center, p1, p2, shape.fillColor);
+  }
+}
 
 void ParticleSystem::clear()
 {
@@ -96,85 +142,14 @@ int ParticleSystem::createBox(Vector2 center, float size)
   addConstraint(startIdx + 0, startIdx + 3);
   addConstraint(startIdx + 1, startIdx + 2);
 
-  return startIdx;
-}
-
-
-int ParticleSystem::createRope(Vector2 start, Vector2 end, int segments)
-{
-  int startIdx = particles.size();
-
-  //create the points along the rope
-  for (int i = 0; i <= segments; i++)
-    {
-      float t = (float)i / segments;
-      Vector2 pos = {
-	start.x + t * (end.x - start.x),
-	start.y + t * (end.y - start.y)
-      };
-
-      particles.emplace_back(pos, 1.0f);
-    }
-
-  //connect them
-  for (int i = 0; i < segments; i++) {
-    addConstraint(startIdx + i, startIdx + i + 1);
-  }
-
-  //pin the first
-  if (!particles.empty())
-    particles[startIdx].mass = 0.0f;
+  
+  Color boxColor = {(unsigned char)(50 + rand() % 200), 
+                    (unsigned char)(50 + rand() % 200), 
+                    (unsigned char)(50 + rand() % 200), 200};
+  shapes.emplace_back(startIdx, 4, Shape::BOX, boxColor);
 
   return startIdx;
 }
-/*
-  I'll fix later
-void ParticleSystem::createCloth(Vector2 topLeft, int width, int height,
-                                 float spacing)
-{
-  clear();
-
-  //create grid of points
-  for (int y = 0; y < height; y++)
-    {
-      for (int x = 0; x < width; x++)
-        {
-          Vector2 pos ={
-            topLeft.x + x * spacing,
-            topLeft.y + y * spacing
-          };
-
-          particles.emplace_back(pos, 1.0f);
-        }
-    }
-
-  //add constraits
-  for (int y = 0; y < height; y++)
-    {
-      for (int x = 0; x < width - 1; x++)
-        {
-          int idx1 = y * width + x;
-          int idx2 = y * width + (x + 1);
-          addConstraint(idx1, idx2);
-        }
-    }
-  for (int y = 0; y < height - 1; y++)
-    {
-      for (int x = 0; x < width; x++)
-        {
-          int idx1 = y * width + x;
-          int idx2 = (y + 1) * width + x;
-          addConstraint(idx1, idx2);
-        }
-    }
-
-  //pin top row
-  for (int x = 0; x < width; x++)
-    {
-      particles[x].mass = 0.0f;
-    }
-}
-*/
 
 // THE BOLB
 int ParticleSystem::createBlob(Vector2 center, float radius, int points)
@@ -205,6 +180,11 @@ int ParticleSystem::createBlob(Vector2 center, float radius, int points)
       if (i < opposite)
 	addConstraint(startIdx + i, startIdx + opposite);
     }
+
+  Color blobColor = {(unsigned char)(50 + rand() % 200), 
+		     (unsigned char)(50 + rand() % 200), 
+		     (unsigned char)(50 + rand() % 200), 180};
+  shapes.emplace_back(startIdx, points, Shape::BLOB, blobColor);
 
   return startIdx;
 }

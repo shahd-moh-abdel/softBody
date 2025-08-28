@@ -15,14 +15,13 @@ int main()
 
   ParticleSystem system;
 
-  //system.createBox(Vector2 {200, 100}, 60);
-  system.createBlob(Vector2{200, 200}, 40, 12);
-  system.createBlob(Vector2{200, 100}, 30, 10);
-  for (int i = 0; i < 5; i++)
-    {
-      system.createBlob(Vector2{200 + i * 100.0f, 100}, 30, 10);
-    }
-  //system.createRope(Vector2 {50, 50}, Vector2 {300, 50}, 15);
+  
+  system.clear();
+  system.createBox(Vector2 {200, 100}, 60);
+  system.createBlob(Vector2{150, 200}, 40, 12);
+  system.createBox(Vector2 {300, 150}, 50);
+  system.createBlob(Vector2{400, 100}, 35, 8);
+      
   system.addCircleObstacle(Vector2{400, 400}, 80);
   system.addCircleObstacle(Vector2{700, 300}, 60);
   system.addRectangleObstacle(Vector2{600, 500}, Vector2{200, 30});
