@@ -32,17 +32,18 @@ void ParticleSystem::update(float dt, int SCREEN_W, int SCREEN_H)
       p.update(dt);
     }
 
+  for (auto &p : particles)
+    {
+      p.constrainWithCollisions(SCREEN_W, SCREEN_H, &collisionSystem);
+    }
+
   for (int i = 0; i < 5; i++)
     {
       for (auto& c : constraints)
 	c.satisfy(particles);
     }
 
-  for (auto &p : particles)
-    {
-      p.constrainWithCollisions(SCREEN_W, SCREEN_H, &collisionSystem);
-    }
-
+  if (enableParticleCollisions)
     resolveParticleCollisions();
 }
 void ParticleSystem::draw()

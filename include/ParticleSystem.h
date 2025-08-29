@@ -29,7 +29,7 @@ public:
   Vector2 gravity  = {0.0f, 300.0f};
   bool enableParticleCollisions = true;
   bool drawFilled = true; 
-  bool showParticles = false;
+  bool showParticles = true;
 
   void clear();
 

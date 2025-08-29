@@ -14,72 +14,62 @@ void CollisionSystem::addRectangle(Vector2 position, Vector2 size)
 
 bool CollisionSystem::checkCircleCollision(Vector2& particlePos, float particleRadius, Vector2& correction)
 {
-    bool collided = false;
     
-    for (auto& circle : circles)
-      {
+    bool collided = false;
+    correction = {0, 0};
+    
+    for (auto& circle : circles) {
         Vector2 diff = {particlePos.x - circle.center.x, particlePos.y - circle.center.y};
         float distance = sqrtf(diff.x * diff.x + diff.y * diff.y);
         float minDistance = particleRadius + circle.radius;
         
-        if (distance < minDistance && distance > 0)
-	  {
-            //depth
+        if (distance < minDistance && distance > 0) {
             float penetration = minDistance - distance;
             
             diff.x /= distance;
             diff.y /= distance;
-            
-            //push
-            correction.x = diff.x * penetration;
-            correction.y = diff.y * penetration;
-            particlePos.x += correction.x;
-            particlePos.y += correction.y;
+            correction.x += diff.x * penetration;
+            correction.y += diff.y * penetration;
             
             collided = true;
-	  }
-      }
+        }
+    }
     
     return collided;
 }
 
-bool CollisionSystem::checkRectangleCollision(Vector2& particlePos, float particleRadius, Vector2& correction) {
-    bool collided = false;
+bool CollisionSystem::checkRectangleCollision(Vector2& particlePos, float particleRadius, Vector2& correction)
+{
+  bool collided = false;
+  correction = {0, 0};
     
-    for (auto& rect : rectangles)
-      {
-        //closest point
-        Vector2 closest = {
-            std::max(rect.position.x, std::min(particlePos.x, rect.position.x + rect.size.x)),
-            std::max(rect.position.y, std::min(particlePos.y, rect.position.y + rect.size.y))
-        };
+  for (auto& rect : rectangles) {
+    Vector2 closest = {
+      std::max(rect.position.x, std::min(particlePos.x, rect.position.x + rect.size.x)),
+      std::max(rect.position.y, std::min(particlePos.y, rect.position.y + rect.size.y))
+    };
         
-        Vector2 diff = {particlePos.x - closest.x, particlePos.y - closest.y};
-        float distance = sqrtf(diff.x * diff.x + diff.y * diff.y);
+    Vector2 diff = {particlePos.x - closest.x, particlePos.y - closest.y};
+    float distance = sqrtf(diff.x * diff.x + diff.y * diff.y);
         
-        if (distance < particleRadius)
-	  {
-            if (distance == 0)
-	      {
-                diff = {1, 0};
-                distance = 1;
-	      }
-            float penetration = particleRadius - distance;
-            
-            diff.x /= distance;
-            diff.y /= distance;
-            
- 
-            correction.x = diff.x * penetration;
-            correction.y = diff.y * penetration;           
-            particlePos.x += correction.x;
-            particlePos.y += correction.y;
-            
-            collided = true;
-	  }
+    if (distance < particleRadius) {
+      if (distance == 0) {
+	diff = {1, 0};
+	distance = 1;
       }
+            
+      float penetration = particleRadius - distance;
+      diff.x /= distance;
+      diff.y /= distance;
+            
+      correction.x += diff.x * penetration;
+      correction.y += diff.y * penetration;
+            
+      collided = true;
+    }
+  }
     
-    return collided;
+  return collided;
 }
 
 bool CollisionSystem::checkParticleCollision(Vector2 pos1, Vector2 pos2, float radius1, float radius2, Vector2& correction)
@@ -88,26 +78,40 @@ bool CollisionSystem::checkParticleCollision(Vector2 pos1, Vector2 pos2, float r
     float distance = sqrtf(diff.x * diff.x + diff.y * diff.y);
     float minDistance = radius1 + radius2;
     
-    if (distance < minDistance && distance > 0)
-      {
+    if (distance < minDistance && distance > 0) {
         float penetration = minDistance - distance;
-	
+        if (penetration < 0.1f) return false;
+        
         diff.x /= distance;
         diff.y /= distance;
-        correction.x = diff.x * penetration * 0.5f;
-        correction.y = diff.y * penetration * 0.5f;
+        correction.x = diff.x * penetration * 0.4f;
+        correction.y = diff.y * penetration * 0.4f;
         
         return true;
-      }
+    }
     
     return false;
 }
 
 void CollisionSystem::resolveCollisions(Vector2& particlePos, float particleRadius)
 {
-  Vector2 correction = {0, 0};
-  checkCircleCollision(particlePos, particleRadius, correction);
-  checkRectangleCollision(particlePos, particleRadius, correction);
+ 
+    Vector2 totalCorrection = {0, 0};
+    Vector2 correction = {0, 0};
+    
+    if (checkCircleCollision(particlePos, particleRadius, correction)) {
+        totalCorrection.x += correction.x;
+        totalCorrection.y += correction.y;
+    }
+    
+    correction = {0, 0};
+    if (checkRectangleCollision(particlePos, particleRadius, correction)) {
+        totalCorrection.x += correction.x;
+        totalCorrection.y += correction.y;
+    }
+    
+    particlePos.x += totalCorrection.x * 0.8f;
+    particlePos.y += totalCorrection.y * 0.8f;
 }
 
 void CollisionSystem::draw()
