@@ -18,7 +18,7 @@ void setupDemoScene(ParticleSystem& system) {
 
 int main()
 {
-  //SetConfigFlags(FLAG_MSAA_4X_HINT);
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Soft Body");
 
   ParticleSystem system;
