@@ -3,6 +3,7 @@
 #include <vector>
 #include "../include/ParticleSystem.h"
 #include "../include/Constraint.h"
+#include <iostream>
 
 void ParticleSystem::addConstraint(int a, int b)
 {
@@ -48,24 +49,29 @@ void ParticleSystem::draw()
 {
   collisionSystem.draw();
 
-  if (drawFilled) {
-    for (auto& shape : shapes) {
-      if (shape.type == Shape::BOX) {
-        drawFilledBox(shape);
-      } else if (shape.type == Shape::BLOB) {
-        drawFilledBlob(shape);
+  if (drawFilled)
+    {
+      for (auto& shape : shapes) {
+	if (shape.type == Shape::BOX) {
+	  drawFilledBox(shape);
+	} else if (shape.type == Shape::BLOB) {
+	  drawFilledBlob(shape);
+	}
       }
     }
-  }
-  
-  for (auto &p : particles)
-      p.draw();
 
-  for (auto &c : constraints)
+  
+  if (showParticles)
     {
-      Vector2 a = particles[c.a].pos;
-      Vector2 b = particles[c.b].pos;
-      DrawLine(a.x, a.y, b.x, b.y, YELLOW);
+      for (auto &c : constraints)
+	{
+	  Vector2 a = particles[c.a].pos;
+	  Vector2 b = particles[c.b].pos;
+	  DrawLine(a.x, a.y, b.x, b.y, YELLOW);
+	}
+    
+      for (auto &p : particles)
+	p.draw();
     }
 }
 
@@ -79,8 +85,9 @@ void ParticleSystem::drawFilledBox(const Shape& shape) {
   }
   
   // Draw as a quad using triangles
-  DrawTriangle(corners[0], corners[1], corners[2], shape.fillColor);
-  DrawTriangle(corners[1], corners[2], corners[3], shape.fillColor);
+  DrawTriangle(corners[2], corners[1], corners[0], shape.fillColor);
+  
+  DrawTriangle(corners[2], corners[3], corners[1], shape.fillColor);
 }
 
 void ParticleSystem::drawFilledBlob(const Shape& shape) {
@@ -100,8 +107,8 @@ void ParticleSystem::drawFilledBlob(const Shape& shape) {
     int next = (i + 1) % shape.particleCount;
     Vector2 p1 = particles[shape.startIndex + i].pos;
     Vector2 p2 = particles[shape.startIndex + next].pos;
-    
-    DrawTriangle(center, p1, p2, shape.fillColor);
+
+    DrawTriangle(p2, p1, center, shape.fillColor);
   }
 }
 
@@ -109,6 +116,7 @@ void ParticleSystem::clear()
 {
   particles.clear();
   constraints.clear();
+  shapes.clear();
   collisionSystem.clear();
 }
 
@@ -145,7 +153,7 @@ int ParticleSystem::createBox(Vector2 center, float size)
   
   Color boxColor = {(unsigned char)(50 + rand() % 200), 
                     (unsigned char)(50 + rand() % 200), 
-                    (unsigned char)(50 + rand() % 200), 200};
+                    (unsigned char)(50 + rand() % 200), 250};
   shapes.emplace_back(startIdx, 4, Shape::BOX, boxColor);
 
   return startIdx;
